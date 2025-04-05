@@ -6,8 +6,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { DepartmentDetailsComponent } from './department-details/department-details.component';
 
 const routes: Routes = [
-    { path: 'departments', component: DepartmentListComponent },
-    {path: 'departments/:id', component: DepartmentDetailsComponent},
+    { path: 'department-list', component: DepartmentListComponent },
+    {path: 'department-list/:id', component: DepartmentDetailsComponent},
     { path: 'employees', component: EmployeeListComponent },
     { path: "**", component: PageNotFoundComponent}
 ];

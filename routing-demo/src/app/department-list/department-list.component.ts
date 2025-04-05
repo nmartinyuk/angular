@@ -41,7 +41,7 @@ export class DepartmentListComponent {
   }
 
   onSelect(department: {id: number, name: string}) {
-    this.router.navigate(['/departments', department.id])
+    this.router.navigate([department.id], {relativeTo: this.activatedRoute})
   }
 
   isSelected(department: IDepartment) {
