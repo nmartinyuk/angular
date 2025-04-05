@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-department-details',
@@ -9,30 +9,50 @@ import { ActivatedRoute } from '@angular/router';
     </div>
     <ng-template #elseBlock>
       <h3>You selected department with id = {{departmentId}}</h3>
+      <button (click)="goPrevious()">Previous</button>
+      <button (click)="goNext()">Next</button>
+      <div>
+        <button (click)="goToDepartments()">Back</button>
+      </div>
     </ng-template>
   `,
   styles: ``,
   standalone: false
 })
 export class DepartmentDetailsComponent {
-  public departmentId: number | undefined | null = null;
+  public departmentId: number = 0;
   public errorMessage: string | undefined;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private activetedRoute: ActivatedRoute, private router: Router) {}
 
-  ngOnInit() {
-    const idParam: string | null = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      let id: number = parseInt(idParam, 10);
-      if (!isNaN(id) && idParam === '' + id) {
-        this.departmentId = id;
+  ngOnInit() {  
+    this.activetedRoute.paramMap.subscribe((params: ParamMap) => {
+      const idParam = params.get('id');
+      if (idParam) {
+        const id = parseInt(idParam, 10);
+        if (!isNaN(id)) {
+          this.departmentId = id;
+        } else {
+          this.errorMessage = 'Invalid department id';
+        }
       } else {
         this.errorMessage = 'id parameter missing';
-        throw Error('id parameter missing');
       }
-    } else {
-      this.errorMessage = 'id parameter missing';
-      throw Error('id parameter missing');
-    }    
+    });
+  }
+
+  goPrevious() {
+    let previousId = this.departmentId - 1;
+    this.router.navigate(['/departments', previousId]);
+  }
+
+  goNext() {
+    let nextId = this.departmentId + 1;
+    this.router.navigate(['/departments', nextId]);
+  }
+
+  goToDepartments() {
+    let selectedId = this.departmentId ? this.departmentId : null;
+    this.router.navigate(['/departments', {id: selectedId}])
   }
 }

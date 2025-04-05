@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute, ParamMap } from '@angular/router'
+import { IDepartment } from '../department';
 
 @Component({
   selector: 'app-department-list',
   template: `
     <h3>Department list</h3>
     <ul class="items">
-      <li (click)="onSelect(department)" *ngFor="let department of departments">
+      <li (click)="onSelect(department)" [class.selected]="isSelected(department)" *ngFor="let department of departments">
         <span class="badge">{{department.id}}</span> {{department.name}}
       </li>
     </ul>
@@ -15,7 +16,7 @@ import { Router } from '@angular/router'
   standalone: false
 })
 export class DepartmentListComponent {
-  departments = [
+  public departments: IDepartment[] = [
     {"id": 1, "name": "Angular"},
     {"id": 2, "name": "Node"},
     {"id": 3, "name": "MongoDB"},
@@ -23,9 +24,27 @@ export class DepartmentListComponent {
     {"id": 5, "name": "Bootstrap"}
   ]
 
-  constructor(private router: Router) { }
+  public selectedId: number = 0;
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+      const idParam = params.get('id');
+      if (idParam) {
+        const id = parseInt(idParam, 10);
+        if (!isNaN(id)) {
+          this.selectedId = id;
+        }
+      }
+    });
+  }
 
   onSelect(department: {id: number, name: string}) {
     this.router.navigate(['/departments', department.id])
+  }
+
+  isSelected(department: IDepartment) {
+    return department.id === this.selectedId;
   }
 }
