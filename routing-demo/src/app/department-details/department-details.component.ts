@@ -9,8 +9,15 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
     </div>
     <ng-template #elseBlock>
       <h3>You selected department with id = {{departmentId}}</h3>
-      <button (click)="goPrevious()">Previous</button>
-      <button (click)="goNext()">Next</button>
+      <p>
+        <button (click)="showOverview()">Overview</button>
+        <button (click)="showContact()">Contact</button>
+      </p>
+      <router-outlet></router-outlet>
+      <p>
+        <button (click)="goPrevious()">Previous</button>
+        <button (click)="goNext()">Next</button>
+      </p>
       <div>
         <button (click)="goToDepartments()">Back</button>
       </div>
@@ -54,5 +61,13 @@ export class DepartmentDetailsComponent {
   goToDepartments() {
     let selectedId = this.departmentId ? this.departmentId : null;
     this.router.navigate(['../', {id: selectedId}], {relativeTo: this.activetedRoute})
+  }
+
+  showOverview() {
+    this.router.navigate(['overview'], {relativeTo: this.activetedRoute});
+  }
+
+  showContact() {
+    this.router.navigate(['contact'], {relativeTo: this.activetedRoute});
   }
 }
