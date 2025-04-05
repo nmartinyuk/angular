@@ -41,7 +41,12 @@ export class DepartmentListComponent {
   }
 
   onSelect(department: {id: number, name: string}) {
-    this.router.navigate([department.id], {relativeTo: this.activatedRoute})
+    // Get current path segments without matrix parameters
+    const currentPath = this.activatedRoute.snapshot.url
+    .map(segment => segment.path)
+    .join('/');
+    // Navigate absolutely by reconstructing the URL with the department id appended.
+    this.router.navigate([`/${currentPath}`, department.id]);
   }
 
   isSelected(department: IDepartment) {
